@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <cctype>
 #include <unistd.h>
+#include <sys/param.h>
+
 
 using namespace std;
 
@@ -107,8 +109,8 @@ int main()
 
 
 			case PWD:
-				char BUF[100];
-				getcwd(BUF, 100);
+				char BUF[MAXPATHLEN];
+				getcwd(BUF, MAXPATHLEN);
 				cout << BUF << endl;
 				break;
 		
@@ -139,6 +141,7 @@ int checkCommand(string input)
 		return PWD;
 }
 
+//Function to check if input into wait command is an integer
 bool isInt(string input2)
 {
 	for(int i = 0; i < input2.size(); i++)
