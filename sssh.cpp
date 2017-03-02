@@ -9,7 +9,8 @@
 #include <cctype>
 #include <unistd.h>
 #include <sys/param.h>
-
+#include <sys/types.h>
+#include <sys/dir.h>
 
 using namespace std;
 
@@ -30,7 +31,8 @@ bool isInt(string);
 
 int main()
 {
-	int inputCheck;
+	int inputCheck, numDir;
+	struct direct **dirNamesLst;
 	string input, temp;
 	vector<string> inputVector;
 	char *str, *point;
@@ -81,6 +83,25 @@ int main()
 				cout << "list" << endl;
 				if(inputVector[1] == "-l")
 					cout << " -l" << endl;
+				
+
+				//obtain the number of files within the directory
+				//scandir is unix API command for file access			
+				numDir = scandir(inputVector[1].c_str(), &dirNamesLst, NULL, alphasort);
+
+				if(numDir < 0)			//if number of directories is less than 0
+					perror("scandir");	//error
+				else				//if no error
+				{
+					//loop and print file names in order
+					for(int i = 0; i < numDir; i++)		
+					{
+						printf("%s\n", dirNamesLst[i]->d_name);
+					
+					}
+					delete[] dirNamesLst;	
+				}
+				
 				break;
 
 
