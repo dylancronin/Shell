@@ -84,7 +84,7 @@ int main()
 				if(inputVector[1] == "-l")
 					cout << " -l" << endl;
 				
-
+				//RIGHT NOW USES DIRECTORY NAME AFTER LS
 				//obtain the number of files within the directory
 				//scandir is unix API command for file access			
 				numDir = scandir(inputVector[1].c_str(), &dirNamesLst, NULL, alphasort);
