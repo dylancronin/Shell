@@ -11,6 +11,7 @@
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/dir.h>
+#include "Process.h"
 
 using namespace std;
 
@@ -36,6 +37,8 @@ int main()
 	string input, temp;
 	vector<string> inputVector;
 	char *str, *point;
+	Process *node = new Process;
+
 
 	do
 	{
@@ -59,7 +62,7 @@ int main()
 		while(point != NULL)
 		{
 			//cout << point << endl;
-			inputVector.push_back(point);
+			inputVector.push_back(point);	//put each part of the command into a vector
 			point = strtok(NULL, " ");
 			
 		}
