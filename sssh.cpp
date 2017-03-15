@@ -32,12 +32,17 @@ bool isInt(string);
 
 int main()
 {
-	int inputCheck, numDir;
+	int inputCheck, numDir, vectSize;
 	struct direct **dirNamesLst;
 	string input, temp;
 	vector<string> inputVector;
 	char *str, *point;
 	Process *node = new Process;
+	string bin;
+	vector<string>::iterator it;
+                                char * exec_args[1024];
+                                int arg_count = 0;
+
 
 
 	do
@@ -83,15 +88,52 @@ int main()
 
 
 			case LS:
+				/*
 				cout << "list" << endl;
 				if(inputVector[1] == "-l")
 					cout << " -l" << endl;
+				*/
+
+				
+//				bin = "/bin/ls";
+//				inputVector.push_back("NULL");
+//				it = inputVector.begin();
+//				inputVector.insert(it, bin);		
+				//execv("/bin/ls", inputVector);
+				
+
+
+				//char * exec_args[1024];
+				///=int arg_count = 0;
+				//std::vector<std::string> theArgs;
+
+				//exec_args[arg_count++] = "/bin/whatever"; // leave command in argv[0]
+				for (int x = 0; x < inputVector.size(); x++) 
+				{
+				   exec_args[arg_count++] = strdup(inputVector[x].c_str());
+				}
+				exec_args[arg_count++] = 0; // tell it when to stop!
+
+				execv("/bin/ls", exec_args);
+
+
+
+				//execl( "/bin/ls", "/bin/ls", "-l", NULL);
+
 				
 				//RIGHT NOW USES DIRECTORY NAME AFTER LS
 				//obtain the number of files within the directory
 				//scandir is unix API command for file access			
-				numDir = scandir(inputVector[1].c_str(), &dirNamesLst, NULL, alphasort);
+				
 
+
+
+
+				//numDir = scandir(inputVector[1].c_str(), &dirNamesLst, NULL, alphasort);
+				
+
+
+				/*
 				if(numDir < 0)			//if number of directories is less than 0
 					perror("scandir");	//error
 				else				//if no error
@@ -104,7 +146,7 @@ int main()
 					}
 					delete[] dirNamesLst;	
 				}
-				
+				*/
 				break;
 
 
