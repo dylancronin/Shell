@@ -15,33 +15,16 @@
 
 using namespace std;
 
-// enum Commands
-// {
-// 	CD = 1,
-// 	LS,
-// 	WAIT,
-// 	RM,
-// 	X,
-// 	CP,
-// 	PWD
-	
-// };
 
 int checkCommand(string input);
 bool isInt(string);
 
 int main()
 {
-	int inputCheck, numDir, vectSize;
-	struct direct **dirNamesLst;
-	string input, temp;
+	string input;
+	int inputCheck;
 	vector<string> inputVector;
 	char *str, *point;
-	Process *node = new Process;
-	string bin;
-
-
-
 
 	do
 	{
@@ -82,34 +65,3 @@ int main()
 
 	return 0;
 }
-
-//Function to allocate an enum to each type of input
-// int checkCommand(string input)
-// {
-// 	if(input == "cd")
-// 		return CD;
-// 	else if(input == "ls")
-// 		return LS;
-// 	else if(input == "wait")
-// 		return WAIT;
-// 	else if (input == "rm")
-// 		return RM;
-// 	else if (input == "xterm")
-// 		return X;
-// 	else if (input == "cp")
-// 		return CP;
-// 	else if (input == "pwd")
-// 		return PWD;
-// }
-
-// Function to check if input into wait command is an integer
-// bool isInt(string input2)
-// {
-// 	for(int i = 0; i < input2.size(); i++)
-// 	{
-// 		if(isdigit(input2[i]) == false)
-// 			return false;
-		
-// 	}	
-// 	return true;
-// }
