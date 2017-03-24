@@ -15,17 +15,17 @@
 
 using namespace std;
 
-enum Commands
-{
-	CD = 1,
-	LS,
-	WAIT,
-	RM,
-	X,
-	CP,
-	PWD
+// enum Commands
+// {
+// 	CD = 1,
+// 	LS,
+// 	WAIT,
+// 	RM,
+// 	X,
+// 	CP,
+// 	PWD
 	
-};
+// };
 
 int checkCommand(string input);
 bool isInt(string);
@@ -39,9 +39,7 @@ int main()
 	char *str, *point;
 	Process *node = new Process;
 	string bin;
-	vector<string>::iterator it;
-                                char * exec_args[1024];
-                                int arg_count = 0;
+
 
 
 
@@ -71,116 +69,13 @@ int main()
 			point = strtok(NULL, " ");
 			
 		}
-
-	
 		//Check the input string
-		inputCheck = checkCommand(inputVector[0]);
 	
 		delete[] str;		//delete dynamically allocated char pointer
 
 		//Use switch to determine which command is being used
-		switch(inputCheck)
-		{
-			case CD:
-				chdir(inputVector[1].c_str());
-				//cout << "change directory" << endl;
-				break;
-
-
-			case LS:
-				/*
-				cout << "list" << endl;
-				if(inputVector[1] == "-l")
-					cout << " -l" << endl;
-				*/
-
-				
-//				bin = "/bin/ls";
-//				inputVector.push_back("NULL");
-//				it = inputVector.begin();
-//				inputVector.insert(it, bin);		
-				//execv("/bin/ls", inputVector);
-				
-
-
-				//char * exec_args[1024];
-				///=int arg_count = 0;
-				//std::vector<std::string> theArgs;
-
-				//exec_args[arg_count++] = "/bin/whatever"; // leave command in argv[0]
-				for (int x = 0; x < inputVector.size(); x++) 
-				{
-				   exec_args[arg_count++] = strdup(inputVector[x].c_str());
-				}
-				exec_args[arg_count++] = 0; // tell it when to stop!
-
-				execv("/bin/ls", exec_args);
-
-
-
-				//execl( "/bin/ls", "/bin/ls", "-l", NULL);
-
-				
-				//RIGHT NOW USES DIRECTORY NAME AFTER LS
-				//obtain the number of files within the directory
-				//scandir is unix API command for file access			
-				
-
-
-
-
-				//numDir = scandir(inputVector[1].c_str(), &dirNamesLst, NULL, alphasort);
-				
-
-
-				/*
-				if(numDir < 0)			//if number of directories is less than 0
-					perror("scandir");	//error
-				else				//if no error
-				{
-					//loop and print file names in order
-					for(int i = 0; i < numDir; i++)		
-					{
-						printf("%s\n", dirNamesLst[i]->d_name);
-					
-					}
-					delete[] dirNamesLst;	
-				}
-				*/
-				break;
-
-
-			case WAIT:
-				cout << "wait" << endl;
-				if(isInt(inputVector[1]))
-					cout << atoi(inputVector[1].c_str()) << endl;
-				else
-					cout << "ENTER NUMBER" << endl;
-				break;
-
-
-			case RM:
-				cout << "remove" << endl;
-				break;
-
-
-			case X:
-				cout << "xterm" << endl;
-				break;
-
-
-			case CP:
-				cout << "copy" << endl;
-				break;
-
-
-			case PWD:
-				char BUF[MAXPATHLEN];
-				getcwd(BUF, MAXPATHLEN);
-				cout << BUF << endl;
-				break;
-		
-		}
+		Process *p = new Process(inputVector);
+		p->forkshit();
 				
 	}while(inputVector[0] != "exit");//exit on input of "exit"
 
@@ -189,32 +84,32 @@ int main()
 }
 
 //Function to allocate an enum to each type of input
-int checkCommand(string input)
-{
-	if(input == "cd")
-		return CD;
-	else if(input == "ls")
-		return LS;
-	else if(input == "wait")
-		return WAIT;
-	else if (input == "rm")
-		return RM;
-	else if (input == "xterm")
-		return X;
-	else if (input == "cp")
-		return CP;
-	else if (input == "pwd")
-		return PWD;
-}
+// int checkCommand(string input)
+// {
+// 	if(input == "cd")
+// 		return CD;
+// 	else if(input == "ls")
+// 		return LS;
+// 	else if(input == "wait")
+// 		return WAIT;
+// 	else if (input == "rm")
+// 		return RM;
+// 	else if (input == "xterm")
+// 		return X;
+// 	else if (input == "cp")
+// 		return CP;
+// 	else if (input == "pwd")
+// 		return PWD;
+// }
 
-//Function to check if input into wait command is an integer
-bool isInt(string input2)
-{
-	for(int i = 0; i < input2.size(); i++)
-	{
-		if(isdigit(input2[i]) == false)
-			return false;
+// Function to check if input into wait command is an integer
+// bool isInt(string input2)
+// {
+// 	for(int i = 0; i < input2.size(); i++)
+// 	{
+// 		if(isdigit(input2[i]) == false)
+// 			return false;
 		
-	}	
-	return true;
-}
+// 	}	
+// 	return true;
+// }
