@@ -3,6 +3,9 @@
 #include "Process.h"
 #include <iostream>
 #include <unistd.h>
+#include <sys/types.h>
+#include <signal.h>
+
 
 using namespace std;
 
@@ -11,98 +14,62 @@ bool InBackground(const vector<string> &vect);
 
 void Process::forkshit()
 {
-	int inputCheck = this->checkCommand(this->inputVector[0]);
 	int pid;
-	switch(inputCheck)
+	string bin = "/bin/";
+	arg_count = 0;
+	for (int x = 0; x < this->inputVector.size(); x++) 
 	{
-		case CD:
-
-			changeDir();
-			break;
-
-
-		case LS:
-			if(!this->isBackground())	//not in Background
-			{
-				pid = fork();
-				if(pid == 0)
-				{			
-						listDir();
-
-				}
-				else					
-					waitpid(pid, NULL, 0);
-			}
-			else	//in background
-				cout << "BITCH";
-			break;
-
-
-		case WAIT:
-			if(!this-> isBackground())
-			{
-				pid = fork();
-				if(pid == 0)
-				{	
-					wait();
-				}
-				else
-					waitpid(pid, NULL, 0);
-			}
-			break;
-
-
-		case RM:
-			if(!this->isBackground())
-			{
-				pid = fork();
-				if(pid == 0)
-				{
-					remove();
-				}
-				else
-					waitpid(pid, NULL, 0);
-
-			}
-			break;
-
-
-		case X:
-			if(!this->isBackground())
-			{
-				pid = fork();
-				if(pid == 0)
-				{
-					xterm();
-				}
-				else
-					waitpid(pid, NULL, 0);
-			}
-
-			break;
-
-
-		case CP:
-			if(!this->isBackground())
-			{
-				cout << "copy" << endl;
-			}
-			break;
-
-
-		case PWD:
-			if(!this->isBackground())
-			{		
-				presentDir();
-			}
-
-			// char BUF[MAXPATHLEN];
-			// getcwd(BUF, MAXPATHLEN);
-			// cout << BUF << endl;
-			break;
-	
+		this->exec_args[arg_count++] = strdup(this->inputVector[x].c_str());
 	}
-	cout <<" done" << endl;
+	this->exec_args[arg_count++] = 0; 
+	
+	// if(this->inputVector[0] == "xterm")
+	// {
+	// 	bin = "/usr/bin/";
+	// 	//cout << bin << endl;
+	// }
+	if (this->inputVector[0] == "exit")
+	{
+		cout << "EXIT" << endl;
+		exit(-1);
+	}
+	bin += this->inputVector[0];
+
+	// execvp(this->commandString.c_str(), exec_args);
+
+	if(this->inputVector[0] == "cd")
+		changeDir();
+	else
+	{	
+		if(!this->isBackground())	//not background
+		{
+			pid = fork();
+			if(pid == 0)		//child process
+			{	
+				execvp(this->commandString.c_str(), exec_args);
+				// execv(bin.c_str(), exec_args);
+
+				cout << "Invalid command." << endl;
+				exit(-1);
+			}
+			else	//parent process
+			{
+				waitpid(pid, NULL, 0);
+				// kill(pid, SIGKILL);
+
+			}
+		
+		}
+		else	//background
+			cout << "Backgound" << endl;
+	}
+
+
+
+
+
+
+
 }
 
 bool InBackground(const vector<string> &vect)
@@ -130,6 +97,8 @@ int Process::checkCommand(string input)
 		return CP;
 	else if (input == "pwd")
 		return PWD;
+	else
+		return OTHER;
 }
 
 void Process::changeDir()
@@ -143,7 +112,9 @@ void Process::changeDir()
 
  //    execv("/bin/cd", this->exec_args);
 	// cout << "Hello" << endl;	
+
 	chdir(this->inputVector[1].c_str());
+
 
 }
 

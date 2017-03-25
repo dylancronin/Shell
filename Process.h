@@ -41,6 +41,7 @@ class Process
 		int arg_count;
 		int cmd;
 		vector<string> inputVector; 
+		string commandString;
 
 		void listDir();
 		void changeDir();
@@ -53,9 +54,10 @@ class Process
 		{
 			cmd = OTHER;
 		};
-		Process(vector<string> argVect)
+		Process(vector<string> argVect, string input)
 		{
 			inputVector = argVect;
+			commandString = input;
 		};
 		//int checkCommand();
 		void forkshit();

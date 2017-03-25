@@ -57,7 +57,7 @@ int main()
 		delete[] str;		//delete dynamically allocated char pointer
 
 		//Use switch to determine which command is being used
-		Process *p = new Process(inputVector);
+		Process *p = new Process(inputVector, input);
 		p->forkshit();
 				
 	}while(inputVector[0] != "exit");//exit on input of "exit"
