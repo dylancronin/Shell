@@ -14,20 +14,23 @@
 #include "background.h"
 #include <sys/wait.h>
 #include <fcntl.h>
+#include <fstream>
 
 using namespace std;
 
 
 void changeDir(const vector<string> &);
-
+	vector<Background*> backgroundVect;
 int main()
 {
-	string input;
-	int inputCheck, backgroundPID, status, x;
+	fstream infile("/dev/null");
+	string input, line;
+	int inputCheck, backgroundPID, status, x, link[2];
 	vector<string> inputVector;
-	vector<Background*> backgroundVect;
+
 	char *str, *point;
 	char * exec_args[1024];
+	char pipeBUF[4096];
 
 	do
 	{
@@ -38,6 +41,13 @@ int main()
 
 		//get input
 		//waitpid(backgroundPID, &status, WUNTRACED);
+
+		//while(getline(infile, line)){cout << "READ" << endl; cout << line << endl;}
+		// pipe(link);
+		// printf("Pipe contents: %s\n", pipeBUF);
+
+
+
 		cout << "sssh: ";
 		getline(cin,input);
 		
@@ -113,14 +123,23 @@ int main()
 
 				if(pid == 0)
 				{
+					Background *p = new Background(input);
+					backgroundVect.push_back(p);
+
 					close(STDIN_FILENO);
 					close(STDOUT_FILENO);
 					close(STDERR_FILENO);
-					x = open("/dev/null", O_RDWR);   // Redirect input, output and stderr to /dev/null
-					dup(x);
-					dup(x);
+					
+					// freopen("/dev/null/", "a+", stdout);
+					//x = open("/dev/null", O_RDWR);   // Redirect input, output and stderr to /dev/null
+					//dup(STDOUT_FILENO);
+					//dup(x);
 					//execvp(args[0], args);       // Execute background process - WILL GO INTO ZOMBIE/DEFUNCT STATE -- 
 					//exit(1);
+					// dup2(link[1], STDOUT_FILENO);
+    	// 			close(link[0]);
+					p->piping();
+
 					backgroundPID = getpid();
 					setpgid(0,0);
 					execvp(exec_args[0], exec_args);
@@ -130,23 +149,28 @@ int main()
 				}
 				else
 				{
-					Background *p = new Background(input);
-					backgroundVect.push_back(p);
+					// close(link[1]);
+					// read(link[0], pipeBUF, sizeof(pipeBUF));
+					// Background *p = new Background(input);
+					// backgroundVect.push_back(p);
 
 				}
 
 
 			}
 		}
+
+		cout << "here";
+		backgroundVect[0]->output();
 				
 	}while(inputVector[0] != "exit");//exit on input of "exit"
 
 
-	for(int i = 0; i < backgroundVect.size(); i++)
-	{	
-		//cout << backgroundVect[i]->getPID() << endl;
-		cout << "Command: " << backgroundVect[i]->getCMD() << endl;
-	}
+	// for(int i = 0; i < backgroundVect.size(); i++)
+	// {	
+	// 	//cout << backgroundVect[i]->getPID() << endl;
+	// 	cout << "Command: " << backgroundVect[i]->getCMD() << endl;
+	// }
 
 	printf("HERE");
 	fflush(stdout);
