@@ -17,9 +17,13 @@ void Process::forkshit()
 	int pid;
 	string bin = "/bin/";
 	arg_count = 0;
+	bool isBackground;
 	for (int x = 0; x < this->inputVector.size(); x++) 
 	{
-		this->exec_args[arg_count++] = strdup(this->inputVector[x].c_str());
+		if(this->inputVector[x] != "&")
+			this->exec_args[arg_count++] = strdup(this->inputVector[x].c_str());
+		else
+			isBackground = true;
 	}
 	this->exec_args[arg_count++] = 0; 
 	
@@ -41,12 +45,12 @@ void Process::forkshit()
 		changeDir();
 	else
 	{	
-		if(!this->isBackground())	//not background
+		if(!isBackground)	//not background
 		{
 			pid = fork();
 			if(pid == 0)		//child process
 			{	
-				execvp(this->commandString.c_str(), exec_args);
+				execvp(exec_args[0], exec_args);
 				// execv(bin.c_str(), exec_args);
 
 				cout << "Invalid command." << endl;
@@ -61,7 +65,9 @@ void Process::forkshit()
 		
 		}
 		else	//background
-			cout << "Backgound" << endl;
+		{
+			cout << Background << endl;
+		}
 	}
 
 

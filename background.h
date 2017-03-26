@@ -10,16 +10,26 @@ using namespace std;
 class Background
 {
 	private:
-		string output;
-		vector<Background> backgroundVector;
-		vector<Background> finished;
+		string command;
+		//int pid;
 
 
 
 
 	public:
-		void sortVector();
-		void removeJob();
+		Background(string cmd)
+		{
+			command = cmd;
+			//pid = process;
+		}
+		// int getPID()
+		// {
+		// 	this -> pid;
+		// }
+		string getCMD()
+		{
+			return this -> command;
+		}
 
 };
 
