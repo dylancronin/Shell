@@ -30,15 +30,17 @@ class Background
 	private:
 		string command;
 		int pid;
-		//int bgNum;
+		string fileName;
+		int bgNum;
 
 
 	public:
-		Background(string cmd, int process)
+		Background(string cmd, int process, string fName, int num)
 		{
 			command = cmd;
 			pid = process;
-			//bgNum = num;
+			fileName = fName;
+			bgNum = num;
 		}
 		
 		//char BUF[4096];
@@ -52,10 +54,15 @@ class Background
 			return this -> pid;
 		}
 
-		// int getbgnum()
-		// {
-		// 	return this -> bgNum;
-		// }
+		string getFileName()
+		{
+			return this -> fileName;
+		}
+
+		int getbgnum()
+		{
+			return this -> bgNum;
+		}
 
 
 

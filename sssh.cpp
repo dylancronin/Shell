@@ -25,6 +25,11 @@ void fileProcessing(string name);
 char pipeBUF[4096];
 vector<string> ProcVect;
 void changeDir(const vector<string> &);
+void clearData(const vector<Background*> &backVect);
+void outputBackground(const vector<Background*> &finishedVect, const vector<Background*> &runningVect);
+//void backgroundCheck(const vector<Background*> &backVect, int &backgroundCount);
+
+
 
 
 string to_string(int i)
@@ -37,12 +42,14 @@ string to_string(int i)
 int main()
 {
 	// vector<Background*> backgroundVect;
-	pipeBUF[0] = 'a';
+	//pipeBUF[0] = 'a';
 	//fstream infile("/dev/null");
 	string input, line, fileName;
 	int inputCheck, backgroundPID = 100, status, x, link[2], backgroundCount = 0;
-	vector<string> inputVector, finished;
-	vector<Background*> backVect;
+	vector<string> inputVector;
+	vector<Background*> backVect, finishedVect, runningVect;
+	vector<Background*>::iterator it;
+	pid_t result;
 
 	char *str, *point;
 	char * exec_args[1024];
@@ -58,44 +65,25 @@ int main()
 
 		cout << "sssh: ";
 		getline(cin,input);
-		cout << "Vect size: " << ProcVect.size() << endl;
-
-		
+		//cout << "Vect size: " << ProcVect.size() << endl;
 
 
-		if(backVect.size() > 0)
-		{
-			for(int i = 0; i < backVect.size(); i++)
-			{
-				pid_t result = waitpid(backVect[0]->getPID(), &status, WNOHANG);
-				if(result == 0)
-				{
-					cout << "ALIVE" << endl;
-				}
-				else if (result == -1)
-					cout << "PROBLEM" << endl;
-				else
-					}cout << "DEAD" << endl;
-			}
-		}
-
-
-		if(ProcVect.size() > 0)
-		{
-			for(int i = 0; i < ProcVect.size(); i++)
-			{
-				if(ifstream(ProcVect[i].c_str()))
-				{
-					fileProcessing(ProcVect[i]);
-					ProcVect.erase(ProcVect.begin() + i);
-				}
-				else
-				{
-					cout << "Running:" << endl;
-					cout << ProcVect[i] << endl;
-				}
-			}
-		}
+		// if(ProcVect.size() > 0)
+		// {
+		// 	for(int i = 0; i < ProcVect.size(); i++)
+		// 	{
+		// 		if(ifstream(ProcVect[i].c_str()))
+		// 		{
+		// 			fileProcessing(ProcVect[i]);
+		// 			ProcVect.erase(ProcVect.begin() + i);
+		// 		}
+		// 		else
+		// 		{
+		// 			cout << "Running:" << endl;
+		// 			cout << ProcVect[i] << endl;
+		// 		}
+		// 	}
+		// }
 		
 		//cout << input << endl;
 
@@ -168,9 +156,6 @@ int main()
 
 				pipe(link);
 
-				//cout << "Background" << endl;
-				fflush(stdout);
-
 				pid = fork();
 
 				if(pid == 0)
@@ -181,6 +166,7 @@ int main()
 					write(link[1], &backgroundPID, sizeof(backgroundPID));
 					//close(link[0]);
 					close(link[0]);
+					fileName = to_string(backgroundPID) + input;
 					freopen(fileName.c_str(), "a+", stdout);
 					//x = open("/dev/null", O_RDWR);   // Redirect input, output and stderr to /dev/null
 					//dup(STDOUT_FILENO);
@@ -203,27 +189,10 @@ int main()
 					//close(link[1]);
 					close(link[0]);
 					//cout << "Child pid: " << backgroundPID << endl;
-					
 					fileName = to_string(backgroundPID) + input;
 
-					Background *n = new Background(input, backgroundPID, fileName);
+					Background *n = new Background(input, backgroundPID, fileName, backgroundCount);
 					backVect.push_back(n);
-
-					//cout << back
-
-
-					ProcVect.push_back(fileName);
-
-					close(link[0]);
-
-					//printf("Pipe contents: %s\n", pipeBUF);
-
-					//waitpid();
-					//cout << "parent: " << backgroundVect.size() << endl;
-					// close(link[1]);
-					// read(link[0], pipeBUF, sizeof(pipeBUF));
-					// Background *p = new Background(input);
-					// backgroundVect.push_back(p);
 
 				}
 
@@ -231,19 +200,67 @@ int main()
 			}
 		}
 
+		if(backVect.size() > 0)
+		{
+			for(int i = 0; i < backVect.size(); i++)
+			{
+				result = waitpid(backVect[i]->getPID(), &status, WNOHANG);
+				cout << "Result: " << result << "for " << backVect[i]->getCMD() << endl; 
+
+				if(result == 0)
+				{
+					runningVect.push_back(backVect[i]);
+					
+				}
+				else if (result == -1)
+					cout << "PROBLEM" << endl;
+				else
+				{
+
+				//cout << finishedVect.size();
+					// for(int i = 0; i < backVect.size(); i++)
+					// {
+						// cout << "Finished:" << endl;
+						// cout << "[" << backVect[i] -> getbgnum() << "] " << backVect[i]->getCMD() << endl; 
+						if(ifstream(backVect[i]->getFileName().c_str()))
+						{
+							finishedVect.push_back(backVect[i]);
+							backgroundCount--;
+
+							for(it = backVect.begin(); it != backVect.end(); it++)
+							{
+								if((*it)->getFileName() == backVect[i]->getFileName())
+								{	
+									cout << "Iterator: " << (*it) -> getCMD() << endl;
+									cout << "Vecotr: " << backVect[i] -> getCMD() << endl;
+									break;
+								}
+							}
+
+							cout << "Removing: " << (*it) -> getCMD() << endl;
+
+							fileProcessing(backVect[i]->getFileName());
+							backVect.erase(it);
+
+						}
+						else
+							cout << "FILE NOT FOUND" << endl;
+					//}
+
+				}
+			}
+
+			outputBackground(finishedVect, runningVect);
+			finishedVect.clear();
+			runningVect.clear();
+		}
 						
 	}while(inputVector[0] != "exit");//exit on input of "exit"
 
-
-	// for(int i = 0; i < backgroundVect.size(); i++)
-	// {	
-	// 	//cout << backgroundVect[i]->getPID() << endl;
-	// 	cout << "Command: " << backgroundVect[i]->getCMD() << endl;
-	// }
-
+	clearData(backVect);
 
 	//printf("HERE");
-	fflush(stdout);
+	//fflush(stdout);
 	return 0;
 }
 
@@ -275,3 +292,37 @@ void fileProcessing(string name)
 	remove(name.c_str());
 
 }
+
+void clearData(const vector<Background*> &backVect)
+{
+	if(backVect.size() > 0)
+	{
+		for(int i = 0; i < backVect.size(); i++)
+		{
+			remove(backVect[i] -> getFileName().c_str());
+		}
+	}
+}
+
+void outputBackground(const vector<Background*> &finishedVect, const vector<Background*> &runningVect)
+{
+	if(runningVect.size() > 0)
+	{
+		cout << "Running:" << endl;
+		for(int i = 0; i < runningVect.size(); i++)
+		{
+			cout << "[" << runningVect[i] -> getbgnum() << "] " << runningVect[i]->getCMD() << endl; 
+		}
+	}
+
+	if(finishedVect.size() > 0)
+	{
+		cout << "Finished:" << endl;
+		for(int i = 0; i < finishedVect.size(); i++)
+		{
+			//cout << "Finished:" << endl;
+			cout << "[" << finishedVect[i] -> getbgnum() << "] " << finishedVect[i]->getCMD() << endl; 
+		}
+	}
+}
+

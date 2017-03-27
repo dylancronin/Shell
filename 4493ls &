@@ -1,12 +1,13 @@
+4418xterm &
+4484sleep 5 &
+4493ls &
 a.out
 background.cpp
 background.h
-ls &6604
 pipe.cpp
 Process.cpp
 Process.h
 README.md
 sssh.cpp
 TEST
-TEST &0
 test.cpp
