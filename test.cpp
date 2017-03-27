@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <unistd.h>
 
 
 using namespace std;
@@ -7,7 +8,6 @@ using namespace std;
 
 int main()
 {
-	string name;
-	cin >> name;
+	sleep(20);
 	cout << "HELLO" << endl;
 }

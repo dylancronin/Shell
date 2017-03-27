@@ -1,11 +1,12 @@
 a.out
 background.cpp
 background.h
-output.txt
+ls &6604
 pipe.cpp
 Process.cpp
 Process.h
 README.md
 sssh.cpp
 TEST
+TEST &0
 test.cpp

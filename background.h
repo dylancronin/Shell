@@ -1,7 +1,6 @@
 #ifndef BACKGROUND_H
 #define BACKGROUND_H
 
-
 #include <iostream>
 #include <string>
 #include <vector>
@@ -30,53 +29,65 @@ class Background
 {
 	private:
 		string command;
-		char pipBUF[4096];
+		int pid;
+		//int bgNum;
 
 
 	public:
-		Background(string cmd)
+		Background(string cmd, int process)
 		{
 			command = cmd;
-			//pid = process;
+			pid = process;
+			//bgNum = num;
 		}
 		
-		char BUF[4096];
+		//char BUF[4096];
 		string getCMD()
 		{
 			return this -> command;
 		}
 
-		void piping()
+		int getPID()
 		{
-			int link[2];
-			pipe(link);
-
-			int pid = fork();
-			
-			if(pid == 0)
-			{
-					dup2(link[1], STDOUT_FILENO);
-    				close(link[0]);
-			}
-
-			else
-			{
-					close(link[1]);
-					read(link[0], pipeBUF, sizeof(pipeBUF));
-			}
-			
-			dup2(link[1], STDOUT_FILENO);
-			close(link[1]);
-			read(link[0], this->pipBUF, sizeof(this->pipBUF));
-			//printf("Hello");
-			//printf("Pipe contents: %s\n", this->pipBUF);
-
+			return this -> pid;
 		}
 
-		void output()
-		{
-			printf("Pipe contents: %s\n", this->pipBUF);
-		}
+		// int getbgnum()
+		// {
+		// 	return this -> bgNum;
+		// }
+
+
+
+		// void piping()
+		// {
+		// 	int link[2];
+		// 	pipe(link);
+
+		// 	int pid = fork();
+			
+		// 	if(pid == 0)
+		// 	{
+		// 			dup2(link[1], STDOUT_FILENO);
+  //   				close(link[0]);
+		// 	}
+
+		// 	else
+		// 	{
+		// 			close(link[1]);
+		// 			read(link[0], pipeBUF, sizeof(pipeBUF));
+		// 	}
+
+
+		// 	//printf("Hello");
+		// 	//printf("Pipe contents: %s\n", this->pipBUF);
+
+		// }
+
+		// char* output()
+		// {
+		// 	return this->pipBUF;
+		// }
 
 };
 
