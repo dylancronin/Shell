@@ -65,29 +65,7 @@ int main()
 
 		cout << "sssh: ";
 		getline(cin,input);
-		//cout << "Vect size: " << ProcVect.size() << endl;
-
-
-		// if(ProcVect.size() > 0)
-		// {
-		// 	for(int i = 0; i < ProcVect.size(); i++)
-		// 	{
-		// 		if(ifstream(ProcVect[i].c_str()))
-		// 		{
-		// 			fileProcessing(ProcVect[i]);
-		// 			ProcVect.erase(ProcVect.begin() + i);
-		// 		}
-		// 		else
-		// 		{
-		// 			cout << "Running:" << endl;
-		// 			cout << ProcVect[i] << endl;
-		// 		}
-		// 	}
-		// }
 		
-		//cout << input << endl;
-
-		//copy input to char pointer		
 		str = new char [input.size()+1];
 		strcpy(str, input.c_str());
 
@@ -130,9 +108,9 @@ int main()
 		// 	cout << "EXIT" << endl;
 		// 	exit(-1);
 		// }
-		if(inputVector[0] == "cd")
+		if(inputVector[0] == "cd") //special case change directory
 			changeDir(inputVector);
-		else
+		else	//if not cd
 		{	
 			if(!isBackground)	//not background
 			{
@@ -158,10 +136,10 @@ int main()
 
 				pid = fork();
 
-				if(pid == 0)
+				if(pid == 0)	//child
 				{
 					backgroundPID = getpid();
-					// close(link[1]);
+					// Pipe the pid to the parent
 					close(link[0]);
 					write(link[1], &backgroundPID, sizeof(backgroundPID));
 					//close(link[0]);
@@ -181,9 +159,9 @@ int main()
 
 
 				}
-				else
+				else	//parent
 				{
-					//close(link[0]);
+					//read the pid of the child from pipe
 					close(link[1]);
 					read(link[0], &backgroundPID, sizeof(backgroundPID));
 					//close(link[1]);
@@ -194,12 +172,17 @@ int main()
 					Background *n = new Background(input, backgroundPID, fileName, backgroundCount);
 					backVect.push_back(n);
 
-				}
+				}//parent
 
 
-			}
-		}
+			}//background
+		}//not a cd command
 
+
+		/*********************************************
+		Handles the vector associated with background
+		processes, and calling the function to output.
+		*********************************************/
 		if(backVect.size() > 0)
 		{
 			for(int i = 0; i < backVect.size(); i++)
@@ -247,8 +230,8 @@ int main()
 							cout << "FILE NOT FOUND" << endl;
 					//}
 
-				}
-			}
+				}//if not running or error
+			}//for loop
 
 			outputBackground(finishedVect, runningVect);
 			finishedVect.clear();
