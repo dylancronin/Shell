@@ -1,9 +1,8 @@
 #ifndef BACKGROUND_H
 #define BACKGROUND_H
 
-#include <iostream>
+
 #include <string>
-#include <vector>
 #include <stdio.h>
 #include <sstream>
 #include <cstring>
@@ -13,8 +12,6 @@
 #include <unistd.h>
 #include <sys/param.h>
 #include <sys/types.h>
-#include <sys/dir.h>
-#include "background.h"
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <fstream>
@@ -23,7 +20,10 @@
 #include <vector>
 using namespace std;
 
-
+/*************************************************
+Create Background class to take care of all of the
+background processes.
+*************************************************/
 
 class Background
 {
@@ -63,38 +63,6 @@ class Background
 		{
 			return this -> bgNum;
 		}
-
-
-
-		// void piping()
-		// {
-		// 	int link[2];
-		// 	pipe(link);
-
-		// 	int pid = fork();
-			
-		// 	if(pid == 0)
-		// 	{
-		// 			dup2(link[1], STDOUT_FILENO);
-  //   				close(link[0]);
-		// 	}
-
-		// 	else
-		// 	{
-		// 			close(link[1]);
-		// 			read(link[0], pipeBUF, sizeof(pipeBUF));
-		// 	}
-
-
-		// 	//printf("Hello");
-		// 	//printf("Pipe contents: %s\n", this->pipBUF);
-
-		// }
-
-		// char* output()
-		// {
-		// 	return this->pipBUF;
-		// }
 
 };
 
