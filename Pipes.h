@@ -1,3 +1,14 @@
+
+/*****************************************************
+File: Pipes.h
+Description: Create a class to hold the arguments to be used in  
+the execvp function.
+Author: Cronin, Slomski
+Course: CS4080, Spring 2017
+*****************************************************/
+
+
+
 #ifndef PIPES_H
 #define PIPES_H
 
@@ -16,10 +27,6 @@
 using namespace std;
 
 
-/*****************************************************
-Create a class to hold the arguments to be used in  
-the execvp function.
-*****************************************************/
 class Pipes
 {
 	private:

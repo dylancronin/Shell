@@ -1,3 +1,13 @@
+/*****************************************************
+File: background.h
+Description: Create Background class to take care of all of the
+background processes.
+Author: Cronin, Slomski
+Course: CS4080, Spring 2017
+*****************************************************/
+
+
+
 #ifndef BACKGROUND_H
 #define BACKGROUND_H
 
@@ -20,10 +30,6 @@
 #include <vector>
 using namespace std;
 
-/*************************************************
-Create Background class to take care of all of the
-background processes.
-*************************************************/
 
 class Background
 {

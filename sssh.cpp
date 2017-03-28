@@ -1,3 +1,10 @@
+/*****************************************************
+File: sssh.cpp
+Description: Runs shell and just about everything
+Author: Cronin, Slomski
+Course: CS4080, Spring 2017
+*****************************************************/
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -39,7 +46,7 @@ string to_string(int i)
 
 int main()
 {
-	string input, line, fileName;
+	string input, line, fileName, prevCommand;
 	int inputCheck, backgroundPID = 100, status, x, link[2], backgroundCount = 0;
 	vector<string> inputVector;
 	vector<Background*> backVect, finishedVect, runningVect;
@@ -56,6 +63,7 @@ int main()
 		//Set variables to null
 		fileName = "";
 		inputVector.clear();
+		prevCommand = input;
 		input = "";
 		inputCheck = 0;
 		isPiping = false;
@@ -68,7 +76,8 @@ int main()
 			else
 				break;
 		}
-
+		if(input == "!!" && prevCommand != "")
+			input = prevCommand;
 		str = new char [input.size()+1];
 		strcpy(str, input.c_str());
 
